@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AI解析結果</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; color: #333; }
+        h1, h2 { color: #333; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .result-table { margin-top: 1em; width: 100%; border-collapse: collapse; }
+        .result-table th, .result-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .result-table th { background-color: #f7f7f7; width: 30%; }
+        .raw-text-box { margin-top: 1em; padding: 1em; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; }
+        .error { color: #d8000c; background-color: #ffbaba; border: 1px solid #d8000c; padding: 10px; border-radius: 5px; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        details > summary { cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AIによるレシート解析結果</h1>
+
+        {% if extracted_data %}
+            <h2>抽出データ</h2>
+            <table class="result-table">
+                <tr>
+                    <th>店名</th>
+                    <td>{{ extracted_data.store_name | default('N/A', true) }}</td>
+                </tr>
+                <tr>
+                    <th>購入日時</th>
+                    <td>{{ extracted_data.transaction_date | default('N/A', true) }}</td>
+                </tr>
+                <tr>
+                    <th>合計金額</th>
+                    <td>&yen; {{ extracted_data.total_amount | default('N/A', true) }}</td>
+                </tr>
+            </table>
+        {% else %}
+            <p class="error">AIによるデータ抽出に失敗しました。下のOCRテキストを確認してください。</p>
+        {% endif %}
+
+        <details style="margin-top: 2em;">
+            <summary>OCR抽出結果（生テキスト）</summary>
+            <div class="raw-text-box">
+                <pre>{{ raw_text }}</pre>
+            </div>
+        </details>
+
+        <p style="margin-top: 2em;">
+            <a href="{{ url_for('index') }}">別の画像をアップロードする</a> |
+            <a href="{{ url_for('history') }}">保存済みデータ履歴を表示</a>
+        </p>
+    </div>
+</body>
+</html>

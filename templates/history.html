@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>家計簿履歴</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; color: #333; }
+        h1 { color: #333; }
+        .container { max-width: 900px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .history-table { margin-top: 1em; width: 100%; border-collapse: collapse; }
+        .history-table th, .history-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .history-table th { background-color: #f7f7f7; }
+        .history-table tr:nth-child(even) { background-color: #f2f2f2; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .no-records { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>家計簿データ履歴</h1>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class=flash-error> <!-- You might want a different style for errors -->
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% if records %}
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>店名</th>
+                        <th>購入日時</th>
+                        <th>合計金額</th>
+                        <th>保存日時</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.store_name }}</td>
+                        <td>{{ record.transaction_date }}</td>
+                        <td>&yen; {{ record.total_amount }}</td>
+                        <td>{{ record.saved_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-records">まだ保存されたデータはありません。</p>
+        {% endif %}
+
+        <p style="margin-top: 2em;">
+            <a href="{{ url_for('index') }}">ホームに戻る</a>
+        </p>
+    </div>
+</body>
+</html>
