@@ -15,6 +15,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'heic'}
 DATABASE = 'receipts.db'
 
 app = Flask(__name__)
+# Ensure the upload folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DATABASE'] = DATABASE
 # IMPORTANT: In a production environment, use a strong, randomly generated
