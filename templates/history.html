@@ -9,12 +9,17 @@
         h1 { color: #333; }
         .container { max-width: 900px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .history-table { margin-top: 1em; width: 100%; border-collapse: collapse; }
-        .history-table th, .history-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .history-table th, .history-table td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: middle; }
         .history-table th { background-color: #f7f7f7; }
         .history-table tr:nth-child(even) { background-color: #f2f2f2; }
+        .flash { padding: 1em; margin-bottom: 1em; border-radius: 5px; color: #155724; background-color: #d4edda; border-color: #c3e6cb;}
         a { color: #007bff; text-decoration: none; }
         a:hover { text-decoration: underline; }
         .no-records { color: #666; }
+        .actions form { display: inline-block; margin-left: 10px; }
+        .actions a, .actions input { display: inline-block; padding: 5px 10px; border-radius: 4px; text-align: center; }
+        .actions input { border: 1px solid #dc3545; background-color: #dc3545; color: white; cursor: pointer; }
+        .actions a { border: 1px solid #007bff; background-color: #007bff; color: white; }
     </style>
 </head>
 <body>
@@ -23,7 +28,7 @@
 
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            <div class=flash-error> <!-- You might want a different style for errors -->
+            <div class="flash">
               {% for message in messages %}
                 <p>{{ message }}</p>
               {% endfor %}
@@ -39,15 +44,22 @@
                         <th>購入日時</th>
                         <th>合計金額</th>
                         <th>保存日時</th>
+                        <th width="150px">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for record in records %}
                     <tr>
-                        <td>{{ record.store_name }}</td>
-                        <td>{{ record.transaction_date }}</td>
-                        <td>&yen; {{ record.total_amount }}</td>
-                        <td>{{ record.saved_at }}</td>
+                        <td>{{ record['store_name'] }}</td>
+                        <td>{{ record['transaction_date'] }}</td>
+                        <td>&yen; {{ record['total_amount'] }}</td>
+                        <td>{{ record['saved_at'] }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('edit_record', id=record['id']) }}">編集</a>
+                            <form action="{{ url_for('delete_record', id=record['id']) }}" method="post" onsubmit="return confirm('本当にこのレコードを削除しますか？');">
+                                <input type="submit" value="削除">
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
